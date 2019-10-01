@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>TIP CALCULATOR APP</title>
+</head>
+<body class="h-screen pt-16 pb-8 overflow-hidden w-full flex justify-center items-center bg-gray-200">
+    <main class="bg-white rounded-lg  md:shadow-xl px-2 w-full md:max-w-sm md:py-8">
+        <div class="mb-4 px-4 w-full">
+            <p class="text-xl text-gray-800 mb-0">Bill total $</p>
+            <input type="text" placeholder="0.00" id="amount" class="text-5xl w-full">
+        </div>
+        <div class="px-4 mb-4">
+            <p class="text-xl text-gray-800 mb-0">Tip %</p>
+            <input type="number" value="10" id="tip" min="1" max="100" class="text-5xl">
+        </div>
+        <div class="bg-purple-300 h-24 rounded-lg shadow-xl text-purple-900 py-4 w-full flex justidy-between items-center px-4 font-semibold">
+            <div class="w-1/2 h-full">
+                <p>Split</p>
+                <p class="text-3xl"><span class="cursor-pointer" id="add">+</span>  <span id="people">1</span>  <span id="minus" class="cursor-pointer">-</span></p>
+            </div>
+            <div class="w-1/2 h-full">
+                <p>Split total</p>
+                 <p class="text-3xl" id="splitTotal">0.00</p>
+            </div>
+        </div>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
