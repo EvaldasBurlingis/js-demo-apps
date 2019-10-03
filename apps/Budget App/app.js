@@ -24,7 +24,9 @@ let budgetController = (function(){
         totals: {
             exp: 0,
             inc: 0
-        }
+        },
+        budget: 0,
+        percentage: 0,
     };
     
     const calculateTotal = (type) => {
@@ -50,9 +52,6 @@ let budgetController = (function(){
                 ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
             }
 
-  
-
-
             //Create new item
             if(type === "exp"){
                 newItem = new Expense(ID, desc, value);
@@ -76,8 +75,19 @@ let budgetController = (function(){
             calculateTotal("inc");
 
             // total budget
+            data.budget = data.totals.inc - data.totals.exp;
 
-            // % of income that we spent
+            // % of income that is our expenses
+            data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+
+        },
+        getBudget: function() {
+            return {
+                totalInc: data.totals.inc,
+                totalExp: data.totals.exp,
+                budget: data.budget,
+                percentage: data.percentage
+            }
         }
     }
 
@@ -95,7 +105,11 @@ let UIController = (function(){
         inputAmount: document.querySelector(".add__value"),
         addBtn: document.querySelector(".add__btn"),
         incomeList: document.querySelector(".income__list"),
-        expensesList: document.querySelector(".expenses__list")
+        expensesList: document.querySelector(".expenses__list"),
+        expensesValue: document.querySelector(".budget__expenses--value"),
+        incomeValue: document.querySelector(".budget__income--value"),
+        totalPercentage: document.querySelector(".budget__expenses--percentage"),
+        budget: document.querySelector(".budget__value"),
     };
 
     return {
@@ -148,12 +162,17 @@ let UIController = (function(){
 
                 DOMElements.expensesList.insertAdjacentHTML("beforeend", html);
             }
-
-
-            // Replace placeholder with data
-    
-            // Insert item into HTML
-
+        },
+        updateBudgetScreens: function(budgets) {
+            DOMElements.incomeValue.textContent = `+${budgets.totalInc}`;
+            DOMElements.expensesValue.textContent = `-${budgets.totalExp}`;
+            DOMElements.totalPercentage.textContent = `${budgets.percentage}%`;
+            
+            if(budgets.budget > 0) {
+                DOMElements.budget.textContent = `+${budgets.budget}`
+            } else {
+                DOMElements.budget.textContent = `${budgets.budget}`
+            }
         }
     }
 
@@ -178,6 +197,12 @@ let AppController = (function(budget, UI){
     }
     const updateBudget = () => {
         budget.calculateBudget();
+
+        const budgetData = budget.getBudget();
+
+        UI.updateBudgetScreens(budgetData);
+
+
     };
 
     const addNewItem = () => {
