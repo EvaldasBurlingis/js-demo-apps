@@ -26,7 +26,16 @@ let budgetController = (function(){
             inc: 0
         }
     };
+    
+    const calculateTotal = (type) => {
+        let sum = 0;
 
+        data.allItems[type].map(item => {
+            sum += item.value;
+        })
+
+        return data.totals[type] = sum;
+    }
 
     return {
         addItem: function(type, desc, value){
@@ -59,6 +68,16 @@ let budgetController = (function(){
         
         test: function() {
             return console.log(data);
+        },
+
+        calculateBudget: function(){
+            // calculate total income and exp
+            calculateTotal("exp");
+            calculateTotal("inc");
+
+            // total budget
+
+            // % of income that we spent
         }
     }
 
@@ -91,8 +110,10 @@ let UIController = (function(){
             return DOMElements;
         },
         clearInputs: function(){
-                DOMElements.inputDesc.value = "";
-                DOMElements.inputAmount.value = "";
+             document.querySelectorAll(".add__description, .add__value").forEach(input =>  {
+                    input.value = "";
+                    DOMElements.inputDesc.focus();
+                });
         },
         addListItem: function(obj, type) {
             let html;
@@ -155,13 +176,23 @@ let AppController = (function(budget, UI){
             }
         })
     }
+    const updateBudget = () => {
+        budget.calculateBudget();
+    };
 
     const addNewItem = () => {
         const input = UI.getInput();
-        const newItem = budget.addItem(input.type, input.desc, input.amount);
-        UI.clearInputs();
-        UI.addListItem(newItem, input.type);
-
+        // Check if inputs are not empty
+        if (input.desc.trim() !== "" && input.amount.trim() !== "" && parseFloat(input.amount) > 0 ) {
+            const newItem = budget.addItem(input.type, input.desc, parseFloat(input.amount));
+    
+            UI.clearInputs();
+            UI.addListItem(newItem, input.type);
+    
+            updateBudget();
+        } else {
+            alert("Fields can't be left empty");
+        }
     }
 
 
