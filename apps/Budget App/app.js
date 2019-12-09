@@ -29,7 +29,6 @@ let budgetController = (function(){
         this.value = value;
     }
 
-    // Keeps all data in one structure
     let data = {
         allItems: {
             exp: [],
@@ -57,23 +56,18 @@ let budgetController = (function(){
         addItem: function(type, desc, value){
             let newItem, ID;
             
-            // Create ID 
-            // Last number of item id + 1
-            // if no items start at 0
             if (data.allItems[type].length === 0){
                 ID = 0
             } else {
                 ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
             }
 
-            //Create new item
             if(type === "exp"){
                 newItem = new Expense(ID, desc, value);
             } else if(type === "inc") {
                 newItem = new Income(ID, desc, value);
             }
             
-            // Push item into data structure
             data.allItems[type].push(newItem)
             
             return newItem;
@@ -87,14 +81,11 @@ let budgetController = (function(){
         },
 
         calculateBudget: function(){
-            // calculate total income and exp
             calculateTotal("exp");
             calculateTotal("inc");
 
-            // total budget
             data.budget = data.totals.inc - data.totals.exp;
 
-            // % of income that is our expenses
             if(data.totals.inc > 0) {
                 data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
             } else {
@@ -124,7 +115,6 @@ let budgetController = (function(){
     }
 
 })();
-
 
 /*
 UI ELEMENT CONTROLLER
@@ -219,21 +209,18 @@ let UIController = (function(){
             }
         },
         deleteListItem: function(item) {
-            // DOMElements.container.childNode.removeChild(item);
             item.parentNode.removeChild(item);
         },
         updateBudgetScreens: function(data) {
             DOMElements.incomeValue.textContent = `${formatNumber(data.totalInc, "inc")}`;
             DOMElements.expensesValue.textContent = `${formatNumber(data.totalExp, "exp")}`;
 
-            // Check if percentage is valid
             if(data.percentage !== -1) {
                 DOMElements.totalPercentage.textContent = `${data.percentage}%`;
             } else {
                 DOMElements.totalPercentage.textContent = `---`;
             }
             
-            // Show "+" sign
             if(data.budget > 0) {
                 DOMElements.budget.textContent = `${formatNumber(data.budget, "inc")}`
             } else if(data.budget === 0) {
@@ -252,7 +239,6 @@ let UIController = (function(){
                     current.textContent = "---";
                 }
             })
-
         },
         displayMonth: function() {
             const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -269,12 +255,9 @@ let UIController = (function(){
                 current.classList.toggle("red-focus");
             })
 
-            DOMElements.addBtn.classList.toggle("red"); 
-            
+            DOMElements.addBtn.classList.toggle("red");             
         }
-
     }
-
 })();
 
 
@@ -286,17 +269,14 @@ let AppController = (function(budget, UI){
     const setupEventListeners = () => {
         const DOM = UI.getDOMElements();
 
-        // Add new item on btn click
         DOM.addBtn.addEventListener("click", addNewItem);
 
-        // Add new item on enter keypress
         document.addEventListener("keypress", (e) => {
             if (e.keyCode === 13 || e.which === 13) {
                 addNewItem();
             }
         })
 
-        // Delete items from the list
         DOM.container.addEventListener("click", deleteItem);
 
         DOM.inputType.addEventListener("change", UI.changedType)
@@ -308,9 +288,6 @@ let AppController = (function(budget, UI){
         const percentages = budget.getPercentages();
 
         UI.displayPercentages(percentages);
-
-
-
     }
 
     const updateBudget = () => {
@@ -323,7 +300,7 @@ let AppController = (function(budget, UI){
 
     const addNewItem = () => {
         const input = UI.getInput();
-        // Check if inputs are not empty
+
         if (input.desc.trim() !== "" && input.amount.trim() !== "" && parseFloat(input.amount) > 0 ) {
             const newItem = budget.addItem(input.type, input.desc, parseFloat(input.amount));
     
@@ -343,23 +320,19 @@ let AppController = (function(budget, UI){
         if(itemID) {
             let type, id, splitID;
             
-            // split id into type & id
             splitID = itemID.id.split("-");
             type = splitID[0];
             id = parseInt(splitID[1]);
 
-            // Delete item from the data structure
             budget.deleteItem(type, id);
-            // Delete item from UI
+
             UI.deleteListItem(itemID);
-            // Update budget
+
             updateBudget();
             updatePercentages();
 
         }
     }
-
-
 
     return {
         init: function(){
@@ -380,8 +353,4 @@ let AppController = (function(budget, UI){
     }
 })(budgetController, UIController);
 
-
-
-
-// Initialize application
 AppController.init();
