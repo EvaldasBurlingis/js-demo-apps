@@ -5,7 +5,6 @@ const minus = document.querySelector("#minus");
 const people = document.querySelector("#people");
 const splitTotal = document.querySelector("#splitTotal");
 
-
 let billTotal;
 let tipTotal = tipInput.value;
 let totalToPay;
