@@ -20,3 +20,12 @@ Learned:
 * Splitting code into controllers
 
 ![alt text](img/budget&#32;app/Screenshot_2019-12-09&#32;Budgety.png "Logo Title")
+
+
+---
+
+## Cat Choir
+
+Meowing space cats
+
+![alt text](img/cat-choir.jpg "Logo Title")
